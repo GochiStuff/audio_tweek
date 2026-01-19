@@ -48,15 +48,15 @@ func (e *CaptureEngine) Start(audioChan chan<- AudioBatch) error {
 	}
 
 	onData := func(pOutput, pInput []byte, frameCount uint32) {
-		if pInput == nil { return }
+		if pInput == nil {
+			return
+		}
 
 		sampleCount := len(pInput) / 2
 		rawSamples := unsafe.Slice((*int16)(unsafe.Pointer(&pInput[0])), sampleCount)
 
 		buf := e.Pool.Get().([]int16)
-		// ensure we don't overrun our buffer
 		if len(buf) < sampleCount {
-			// allocate a fresh buffer sized to sampleCount
 			buf = make([]int16, sampleCount)
 		}
 		copy(buf, rawSamples)
